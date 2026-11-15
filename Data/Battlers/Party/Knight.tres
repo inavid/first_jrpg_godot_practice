@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="BattlerData" format=3 uid="uid://btlmo2yo8vado"]
+
+[ext_resource type="Resource" uid="uid://csymh2ykdjvd6" path="res://Data/Useables/physical_basic_attack.tres" id="1_hlkpx"]
+[ext_resource type="SpriteFrames" uid="uid://7btx380wm4b7" path="res://Sprites/Battle/PlayerCharacters/knight_frames.tres" id="2_43smp"]
+[ext_resource type="Script" uid="uid://bwv5xed7cwfrj" path="res://Scripts/Common/battler_data.gd" id="3_vn0ya"]
+[ext_resource type="Script" uid="uid://k72lpmfsx0gm" path="res://Scripts/Battle/Useable/skill_data.gd" id="4_m8alb"]
+[ext_resource type="Resource" uid="uid://snqujo63vd05" path="res://Data/Skills/heavy_attack.tres" id="5_1l2eu"]
+[ext_resource type="Resource" uid="uid://tut0ypnko2q6" path="res://Data/Skills/stomp.tres" id="6_v4l5y"]
+[ext_resource type="Resource" uid="uid://7pejw6u2r8mx" path="res://Data/Skills/bandage.tres" id="7_8cgds"]
+
+[resource]
+script = ExtResource("3_vn0ya")
+display_name = "Knight"
+skills = Array[ExtResource("4_m8alb")]([ExtResource("5_1l2eu"), ExtResource("6_v4l5y"), ExtResource("7_8cgds")])
+basic_attack = ExtResource("1_hlkpx")
+battle_sprite_frames = ExtResource("2_43smp")
+metadata/_custom_type_script = "uid://bwv5xed7cwfrj"

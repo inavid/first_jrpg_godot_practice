@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://7pejw6u2r8mx"]
+
+[ext_resource type="Script" uid="uid://k72lpmfsx0gm" path="res://Scripts/Battle/Useable/skill_data.gd" id="1_wqw8v"]
+
+[resource]
+script = ExtResource("1_wqw8v")
+mana_cost = 15
+display_name = "Bandage"
+description = "Heal 10HP"
+target_type = 4
+output_type = 3
+power = 10
+accuracy = 1.0
+metadata/_custom_type_script = "uid://k72lpmfsx0gm"

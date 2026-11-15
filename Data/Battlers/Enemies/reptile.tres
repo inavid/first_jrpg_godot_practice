@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BattlerData" format=3 uid="uid://bfd83pvb235sl"]
+
+[ext_resource type="Resource" uid="uid://csymh2ykdjvd6" path="res://Data/Useables/physical_basic_attack.tres" id="1_c2jb5"]
+[ext_resource type="Script" uid="uid://bwv5xed7cwfrj" path="res://Scripts/Common/battler_data.gd" id="1_tkj83"]
+[ext_resource type="Script" uid="uid://k72lpmfsx0gm" path="res://Scripts/Battle/Useable/skill_data.gd" id="2_c2jb5"]
+[ext_resource type="SpriteFrames" uid="uid://cgws72by2w8bh" path="res://Sprites/Battle/EnemyCharacters/reptile_frames.tres" id="2_oi8r1"]
+
+[resource]
+script = ExtResource("1_tkj83")
+basic_attack = ExtResource("1_c2jb5")
+battle_sprite_frames = ExtResource("2_oi8r1")
+metadata/_custom_type_script = "uid://bwv5xed7cwfrj"

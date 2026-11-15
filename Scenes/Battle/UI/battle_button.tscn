@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://d1mgdcwptnusq"]
+
+[ext_resource type="FontFile" uid="uid://cqbl1cx5rtuq2" path="res://Font/Jersey20-Regular.ttf" id="1_2066n"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wqxgi"]
+bg_color = Color(0.33387527, 0.1055335, 0.36164656, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_o8bsx"]
+bg_color = Color(0.29800403, 0.090879984, 0.32299954, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_en5gs"]
+bg_color = Color(0.3963105, 0.13320878, 0.42807043, 1)
+
+[node name="BattleButton" type="Button" unique_id=295776103]
+offset_left = 322.0
+offset_top = 22.0
+offset_right = 447.0
+offset_bottom = 58.0
+theme_override_fonts/font = ExtResource("1_2066n")
+theme_override_styles/normal = SubResource("StyleBoxFlat_wqxgi")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_o8bsx")
+theme_override_styles/hover = SubResource("StyleBoxFlat_en5gs")
+text = "Button Text"

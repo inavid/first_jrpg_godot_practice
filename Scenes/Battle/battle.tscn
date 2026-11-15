@@ -1,0 +1,69 @@
+[gd_scene format=3 uid="uid://bphmj470xcg70"]
+
+[ext_resource type="Texture2D" uid="uid://uc74vp21npha" path="res://Sprites/Battle/Backgrounds/1-night.png" id="1_3qw02"]
+[ext_resource type="Script" uid="uid://mlivh84jiokf" path="res://Scripts/Battle/battle_manager.gd" id="1_aqr0y"]
+[ext_resource type="PackedScene" uid="uid://bik6xlmgd13on" path="res://Scenes/Battle/battler.tscn" id="2_aqr0y"]
+[ext_resource type="Script" uid="uid://b1gogy56qgxf0" path="res://Scripts/Battle/UI/battle_ui.gd" id="4_o8bsx"]
+[ext_resource type="PackedScene" uid="uid://bv73td5b6jdeb" path="res://Scenes/Battle/UI/button_container.tscn" id="4_wqxgi"]
+[ext_resource type="Resource" uid="uid://bfd83pvb235sl" path="res://Data/Battlers/Enemies/reptile.tres" id="6_en5gs"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_aqr0y"]
+bg_color = Color(0.16915189, 0, 0.18802287, 1)
+
+[node name="Main" type="Node2D" unique_id=939947052]
+
+[node name="BattleManager" type="Node" parent="." unique_id=904051024 node_paths=PackedStringArray("party", "enemies")]
+script = ExtResource("1_aqr0y")
+party = [NodePath("../PlayerBattler")]
+enemies = [NodePath("../EnemyBattler")]
+metadata/_custom_type_script = "uid://mlivh84jiokf"
+
+[node name="BattleUI" type="Panel" parent="BattleManager" unique_id=1496996620 node_paths=PackedStringArray("buttonContainers")]
+offset_left = -384.0
+offset_top = 95.0
+offset_right = 384.0
+offset_bottom = 215.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_aqr0y")
+script = ExtResource("4_o8bsx")
+buttonContainers = {
+"actions": NodePath("ButtonContainers/ActionsButtonContainer"),
+"skills": NodePath("ButtonContainers/SkillsButtonContainer2"),
+"targets": NodePath("ButtonContainers/TargetsButtonContainer3")
+}
+
+[node name="ButtonContainers" type="HBoxContainer" parent="BattleManager/BattleUI" unique_id=325293506]
+layout_mode = 0
+offset_left = 252.0
+offset_top = 5.0
+offset_right = 762.0
+offset_bottom = 118.0
+theme_override_constants/separation = 15
+
+[node name="ActionsButtonContainer" parent="BattleManager/BattleUI/ButtonContainers" unique_id=132736599 instance=ExtResource("4_wqxgi")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkillsButtonContainer2" parent="BattleManager/BattleUI/ButtonContainers" unique_id=1058018637 instance=ExtResource("4_wqxgi")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TargetsButtonContainer3" parent="BattleManager/BattleUI/ButtonContainers" unique_id=372561485 instance=ExtResource("4_wqxgi")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Background" type="Sprite2D" parent="." unique_id=392410369]
+z_index = -100
+position = Vector2(0, -22)
+scale = Vector2(1.2, 1)
+texture = ExtResource("1_3qw02")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1722888551]
+zoom = Vector2(1.5, 1.5)
+
+[node name="PlayerBattler" parent="." unique_id=1711718917 instance=ExtResource("2_aqr0y")]
+position = Vector2(174, -13)
+
+[node name="EnemyBattler" parent="." unique_id=1212869555 instance=ExtResource("2_aqr0y")]
+position = Vector2(-183, 3)
+data = ExtResource("6_en5gs")

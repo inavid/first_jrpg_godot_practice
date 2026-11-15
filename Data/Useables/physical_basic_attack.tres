@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="UseableData" format=3 uid="uid://csymh2ykdjvd6"]
+
+[ext_resource type="Script" uid="uid://b057rka0sup2g" path="res://Scripts/Battle/Useable/useable_data.gd" id="1_po6y6"]
+
+[resource]
+script = ExtResource("1_po6y6")
+display_name = "Basic Attack"
+description = "100% damage to a single target."
+output_type = 1
+scaling_stat = 3
+defending_stat = 4
+accuracy = 1.0
+metadata/_custom_type_script = "uid://b057rka0sup2g"

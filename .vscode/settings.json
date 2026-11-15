@@ -1,0 +1,29 @@
+{
+    "godotTools.editorPath.godot4": "/Applications/Godot.app",
+    // Language Server Protocol (LSP) settings for Godot 4
+    "godot_tools.lsp.server_port": 6005,
+    "godot_tools.lsp.headless": true,
+
+    // Formatting & File Handling (Matches Godot's built-in editor style)
+    "[gdscript]": {
+        "editor.insertSpaces": false,
+        "editor.tabSize": 4,
+        "editor.detectIndentation": false,
+        "editor.formatOnSave": true
+    },
+
+    // Hide Godot metadata and import clutter from the VS Code file explorer
+    "files.exclude": {
+        "**/*.uid": true,
+        "**/*.import": true,
+        "**/.godot": true
+    },
+    "search.exclude": {
+        "**/*.uid": true,
+        "**/*.import": true,
+        "**/.godot": true
+    },
+
+    // Auto-save when switching back to the Godot window so changes compile immediately
+    "files.autoSave": "onWindowChange"
+}

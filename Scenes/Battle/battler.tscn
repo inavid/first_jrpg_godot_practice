@@ -1,0 +1,120 @@
+[gd_scene format=3 uid="uid://bik6xlmgd13on"]
+
+[ext_resource type="Script" uid="uid://chyitb81asuno" path="res://Scripts/Battle/Battler/battler.gd" id="1_hwev6"]
+[ext_resource type="Texture2D" uid="uid://bydjsvk48q00x" path="res://Sprites/Battle/UI/turn_indicator.png" id="1_ttgct"]
+[ext_resource type="Resource" uid="uid://btlmo2yo8vado" path="res://Data/Battlers/Party/Knight.tres" id="2_wqhrw"]
+[ext_resource type="FontFile" uid="uid://cqbl1cx5rtuq2" path="res://Font/Jersey20-Regular.ttf" id="3_wqhrw"]
+[ext_resource type="SpriteFrames" uid="uid://cgws72by2w8bh" path="res://Sprites/Battle/EnemyCharacters/reptile_frames.tres" id="4_6scdb"]
+[ext_resource type="Script" uid="uid://b1w4wngvjoxv5" path="res://Scripts/Battle/Battler/battler_header_bar.gd" id="5_6scdb"]
+[ext_resource type="Script" uid="uid://bnpoiqbnlnvee" path="res://Scripts/Battle/Battler/battler_animation.gd" id="5_jj3e4"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w7k78"]
+radius = 46.389652
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_oxf17"]
+bg_color = Color(0.29473096, 0.29473096, 0.29473096, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1ruyk"]
+bg_color = Color(0.40784314, 0, 0.09411765, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1otgo"]
+bg_color = Color(0.9098039, 0.17254902, 0.22745098, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pd5xk"]
+bg_color = Color(0.047058824, 0.1764706, 0.5254902, 0.5529412)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_f6xt6"]
+bg_color = Color(0.44385356, 0.5708088, 0.9859752, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oxf17"]
+font = ExtResource("3_wqhrw")
+font_size = 9
+outline_size = 2
+outline_color = Color(0.174626, 0.17462596, 0.17462596, 1)
+
+[node name="Battler" type="Area2D" unique_id=1711718917]
+script = ExtResource("1_hwev6")
+data = ExtResource("2_wqhrw")
+
+[node name="TurnIndicator" type="Sprite2D" parent="." unique_id=1063512958]
+position = Vector2(-46, -52)
+rotation = 1.5707964
+texture = ExtResource("1_ttgct")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=466615105]
+sprite_frames = ExtResource("4_6scdb")
+animation = &"hit"
+frame_progress = 0.48689505
+script = ExtResource("5_jj3e4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=247714057]
+position = Vector2(0, 10)
+shape = SubResource("CircleShape2D_w7k78")
+
+[node name="HeaderBar" type="Control" parent="." unique_id=1292988239]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -35.0
+offset_top = -75.0
+offset_right = 65.0
+offset_bottom = -45.0
+script = ExtResource("5_6scdb")
+
+[node name="BG" type="Panel" parent="HeaderBar" unique_id=544304123]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -15.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBoxFlat_oxf17")
+
+[node name="HealtBar" type="ProgressBar" parent="HeaderBar" unique_id=30226157]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 17.0
+offset_right = 49.0
+offset_bottom = 28.0
+theme_override_styles/background = SubResource("StyleBoxFlat_1ruyk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_1otgo")
+value = 50.0
+show_percentage = false
+
+[node name="ManaBar" type="ProgressBar" parent="HeaderBar" unique_id=328062608]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 17.0
+offset_right = 98.0
+offset_bottom = 28.0
+theme_override_styles/background = SubResource("StyleBoxFlat_pd5xk")
+theme_override_styles/fill = SubResource("StyleBoxFlat_f6xt6")
+value = 50.0
+show_percentage = false
+
+[node name="HealtLabel" type="Label" parent="HeaderBar" unique_id=1744846862]
+layout_mode = 0
+offset_left = 3.0
+offset_top = 17.0
+offset_right = 49.0
+offset_bottom = 28.0
+text = "HP: 30/40"
+label_settings = SubResource("LabelSettings_oxf17")
+
+[node name="ManaLabel" type="Label" parent="HeaderBar" unique_id=283257545]
+layout_mode = 0
+offset_left = 52.0
+offset_top = 17.0
+offset_right = 98.0
+offset_bottom = 28.0
+text = "MP: 10/20"
+label_settings = SubResource("LabelSettings_oxf17")
+
+[node name="StatusIconContainer" type="HBoxContainer" parent="HeaderBar" unique_id=401807939]
+layout_mode = 0
+offset_top = 6.0
+offset_right = 99.0
+offset_bottom = 15.0
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="AnimatedSprite2D" method="_on_animation_finished"]
