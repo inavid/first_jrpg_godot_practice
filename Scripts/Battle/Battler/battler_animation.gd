@@ -13,3 +13,12 @@ func initialize(data: BattlerData):
 func _on_animation_finished() -> void:
 	if animation != IDLE:
 		play(IDLE)
+
+func play_action_animation(action: BattleAction):
+	if action.useable and action.useable.output_type != UseableData.OutputType.HEAL:
+		play(ATTACK)
+
+func flash_color(color: Color):
+	self_modulate = color
+	await get_tree().create_timer(0.1).timeout
+	self_modulate = Color.WHITE

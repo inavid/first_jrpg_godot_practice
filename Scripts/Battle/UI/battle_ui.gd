@@ -112,7 +112,7 @@ func _on_flee_selected():
 	pass
 
 func _on_end_turn_selected():
-	print("Flee Selected")
+	print("End Turn Selected")
 	pass
 
 func _on_skill_selected(skill: SkillData):

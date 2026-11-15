@@ -92,6 +92,8 @@ func _enter_turn_resolution():
         _next_battler_turn()
         return
 
+    current_actor.anim.play_action_animation(current_action)
+
     match current_action.type:
         BattleAction.Type.BASIC_ATTACK: _execute_useable()
         BattleAction.Type.SKILL: _execute_skill()

@@ -44,7 +44,8 @@ texture = ExtResource("1_ttgct")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=466615105]
 sprite_frames = ExtResource("4_6scdb")
 animation = &"hit"
-frame_progress = 0.48689505
+frame = 1
+frame_progress = 1.0
 script = ExtResource("5_jj3e4")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=247714057]

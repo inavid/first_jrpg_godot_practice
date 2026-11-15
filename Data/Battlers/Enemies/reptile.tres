@@ -7,6 +7,8 @@
 
 [resource]
 script = ExtResource("1_tkj83")
+display_name = "Reptile"
+team = 1
 basic_attack = ExtResource("1_c2jb5")
 battle_sprite_frames = ExtResource("2_oi8r1")
 metadata/_custom_type_script = "uid://bwv5xed7cwfrj"

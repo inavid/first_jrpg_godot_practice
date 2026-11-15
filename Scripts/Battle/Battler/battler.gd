@@ -36,6 +36,7 @@ func take_damage(amount: int):
 	HealtChanged.emit(current_healt, max_healt)
 
 	anim.play(BattlerAnimation.HIT)
+	anim.flash_color(Color.RED)
 
 	if current_healt <= 0:
 		die()
@@ -57,7 +58,7 @@ func spend_mana(amount: int):
 		return false
 
 	var max_mana: int = get_stat(BattlerData.Stat.MAX_MANA)
-	current_mana += amount
+	current_mana -= amount
 	ManaChanged.emit(current_mana, max_mana)
 	return true
 
