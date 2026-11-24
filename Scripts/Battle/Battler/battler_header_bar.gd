@@ -1,25 +1,30 @@
 class_name BattleHeaderBar
 extends Control
 
-@onready var healt_bar: ProgressBar = $HealtBar
-@onready var healt_label: Label = $HealtLabel
+# Child UI nodes used to show the battler's health.
+@onready var health_bar : ProgressBar = $HealthBar
+@onready var health_label : Label = $HealthLabel
 
-@onready var mana_bar: ProgressBar = $ManaBar
-@onready var mana_label: Label = $ManaLabel
+# Child UI nodes used to show the battler's mana.
+@onready var mana_bar : ProgressBar = $ManaBar
+@onready var mana_label : Label = $ManaLabel
 
-@onready var battler: Battler = get_parent()
+# The battler whose stats this header reflects; assumes the parent node is a Battler.
+@onready var battler : Battler = get_parent()
 
-func _ready() -> void:
-	#Connect to signals
-	battler.HealtChanged.connect(_on_healt_changed)
-	battler.ManaChanged.connect(_on_mana_changed)
+func _ready ():
+    # Connect to signals
+    battler.HealthChanged.connect(_on_health_changed)
+    battler.ManaChanged.connect(_on_mana_changed)
 
-func _on_healt_changed(cur: int, max: int):
-	healt_label.text = "HP: %s / %s" % [cur, max]
-	healt_bar.max_value = max
-	healt_bar.value = cur
+# Update the HEALTH bar when battler's HEALTH changes
+func _on_health_changed (cur : int, max : int):
+    health_label.text = "HP: %s / %s" % [cur, max]
+    health_bar.max_value = max
+    health_bar.value = cur
 
-func _on_mana_changed(cur: int, max: int):
-	mana_label.text = "MP: %s / %s" % [cur, max]
-	mana_bar.max_value = max
-	mana_bar.value = cur
+# Update the MANA bar when battler's MANA changes
+func _on_mana_changed (cur : int, max : int):
+    mana_label.text = "MP: %s / %s" % [cur, max]
+    mana_bar.max_value = max
+    mana_bar.value = cur

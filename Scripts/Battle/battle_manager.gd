@@ -10,130 +10,173 @@ enum State
     FLEE
 }
 
-signal StateChanged(state: State)
-signal TurnBegan(battler: Battler)
-signal TurnEnded(battler: Battler)
+# Signals that let other systems (UI, animations, etc.) react to battle flow.
+signal StateChanged (state : State)
+signal TurnBegan (battler : Battler)
+signal TurnEnded (battler : Battler)
 
-@export var party: Array[Battler]
-@export var enemies: Array[Battler]
+@export var party : Array[Battler]
+@export var enemies : Array[Battler]
 
-var alive_party: Array[Battler]:
+# An array constructed ONLY of party battlers who have their 'is_alive' variable set to true
+var alive_party : Array[Battler]:
     get: return party.filter(func(b): return b.is_alive)
 
-var alive_enemies: Array[Battler]:
+var alive_enemies : Array[Battler]:
     get: return enemies.filter(func(b): return b.is_alive)
 
-var turn_queu: Array[Battler]
+# Core battle state: which battler is currently acting and what action they chose.
+var turn_queue : Array[Battler]
+var state : State
+var current_actor : Battler
+var current_action : BattleAction
 
-var state: State
-var current_actor: Battler # The turn active battler
-var current_action: BattleAction # The action executed by current turn
-
-func _ready() -> void:
+func _ready ():
     _change_state(State.INTRO)
 
-# func _process(delta: float) -> void:
-#     if state == State.BATTLER_INPUT and party.has(current_actor):
-#         if Input.is_action_just_pressed("ui_accept"):
-#             var action : BattleAction = BattleAction.new()
-#             action.actor = current_actor
-#             action.targets = enemies
-#             submit_player_input(action)
+# Determine the order the battlers will take their turns
+func _build_turn_queue ():
+    var all : Array[Battler] = party + enemies
+    all = all.filter(func(b): return b.is_alive)
+    turn_queue = all
 
-func _build_turn_queue():
-    var all: Array[Battler] = party + enemies
-    all = all.filter(func(battler): return battler.is_alive) # Dead characters should not have a turn
-    turn_queu = all
-
-func _next_battler_turn():
+# Progress through the turn queue, activating the next battler
+func _next_battler_turn ():
     if current_actor != null:
         TurnEnded.emit(current_actor)
-
-    if turn_queu.is_empty():
+    
+    if turn_queue.is_empty():
         _build_turn_queue()
-
-    current_actor = turn_queu.pop_front()
-
+    
+    current_actor = turn_queue.pop_front()
+    
+    # Skip dead battlers that may have been queued before dying.
     if not current_actor.is_alive:
         _next_battler_turn()
         return
-
+    
     print("Current turn: %s" % current_actor.name)
-
+    
     TurnBegan.emit(current_actor)
     _change_state(State.BATTLER_INPUT)
 
-func _change_state(new_state: State):
+# Move to a new state and let external systems know via StateChanged.
+func _change_state (new_state : State):
     state = new_state
-
+    
     match state:
         State.INTRO: _enter_intro()
         State.BATTLER_INPUT: _enter_battler_input()
         State.TURN_RESOLUTION: _enter_turn_resolution()
         State.END: _enter_end()
         State.FLEE: _enter_flee()
-
-    print("New State: %s" % state)
-
+    
+    print("New state: %s" % state)
     StateChanged.emit(state)
 
-func _enter_intro():
+# -> INTRO state
+# Called at the start of the game - initial setup
+func _enter_intro ():
+    await get_tree().create_timer(1.0).timeout
     _build_turn_queue()
     _next_battler_turn()
 
-func _enter_battler_input():
+# -> BATTLER_INPUT state
+# Where the enemy will determine their action - the player's is managed by the BattleUI script
+func _enter_battler_input ():
     if current_actor.data.team == BattlerData.Team.PARTY:
-        pass # Do nothing as this is managed by thge battleUI script
+        pass # Do nothing as this is managed by the BattleUI script
     else:
-        pass # Decide enemy's action
+        # Enemy AI: choose a simple basic attack against a random living party member.
+        current_action = BattleAction.new()
+        current_action.actor = current_actor
+        current_action.targets = [alive_party.pick_random()]
+        current_action.type = BattleAction.Type.BASIC_ATTACK
+        current_action.useable = current_actor.data.basic_attack
+        _change_state(State.TURN_RESOLUTION)
 
-func _enter_turn_resolution():
+# -> TURN_RESOLUTION state
+# When the enemy/player submits an action for their battler to perform
+func _enter_turn_resolution ():
+    # The current_action will be null if turn is skipped, so continue to the next battler
     if not current_action:
         _next_battler_turn()
         return
-
+    
     current_actor.anim.play_action_animation(current_action)
-
+    
     match current_action.type:
         BattleAction.Type.BASIC_ATTACK: _execute_useable()
         BattleAction.Type.SKILL: _execute_skill()
         BattleAction.Type.DEFEND: _execute_defend()
         BattleAction.Type.FLEE: _execute_flee()
-
+    
+    # Wait x seconds before moving on to next battler
     await get_tree().create_timer(1.0).timeout
-
+    
+    # If we have changed states midway, don't continue on to the next battler
+    # This happens when all the enemies/players are defeated and the game is over
+    if state != State.TURN_RESOLUTION:
+        return
+    
     _next_battler_turn()
 
+# -> END state
+# When either the enemy or party have been entirely defeated
+func _enter_end ():
+    if alive_enemies.is_empty():
+        print("Party wins!")
+    else:
+        print("Enemies win!")
 
-func _enter_end():
+# -> FLEE state
+# When the player wants to attempt to leave battle
+func _enter_flee ():
     pass
 
-func _enter_flee():
-    pass
-
-func submit_player_input(action: BattleAction):
+# Called when the player has selected an action to perform for their current battler
+func submit_player_input (action : BattleAction):
     current_action = action
     _change_state(State.TURN_RESOLUTION)
 
-func _execute_useable():
+# Perform the current BattleAction's UseableData upon all targets
+func _execute_useable ():
     for target in current_action.targets:
-        if current_action.useable.output_type == UseableData.OutputType.HEAL:
-            target.heal(current_action.useable.power)
+        var result = ActionCalculator.calculate(current_actor, target, current_action.useable)
+        
+        if result.is_heal:
+            target.heal(result.amount)
+        elif not result.is_hit:
+            target.evade()
         else:
-            var dmg: int = current_action.actor.get_stat(BattlerData.Stat.ATTACK)
-            target.take_damage(dmg)
+            if result.is_crit:
+                # Play unique sound/effect
+                pass
+            
+            target.take_damage(result.amount)
 
-func _execute_skill():
-    var skill: SkillData = current_action.useable
-
+# Perform the current BattleAction' SkillData
+func _execute_skill ():
+    var skill : SkillData = current_action.useable
+    
+    # Skills can fail if the battler cannot afford their cost.
     if not skill.can_afford(current_actor):
         return
-
+    
     current_actor.spend_mana(skill.mana_cost)
     _execute_useable()
 
-func _execute_defend():
+# Give the battler the 'Defense' status - blocking damage for 1 turn
+func _execute_defend ():
     pass
 
-func _execute_flee():
+# Attempt to leave the battle
+func _execute_flee ():
     pass
+
+# Called when a battler has died -> check to see if either team has won the battle
+func battler_died (battler : Battler):
+    print("%s has been defeated!" % battler.data.display_name)
+    
+    if alive_enemies.is_empty() or alive_party.is_empty():
+        _change_state(State.END)
